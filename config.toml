@@ -1,0 +1,88 @@
+# Everything the 2D drawing cannot tell us on its own. Geometry itself always comes from the DXF.
+
+[input]
+dxf = "input/SUBMISSION - 04.dxf"
+
+[regions]
+# Which part of the DXF modelspace is which drawing (axis-aligned boxes, drawing units = metres).
+# The extractor verifies each box really contains the expected title text and fails loudly if not.
+ground = { bbox = [310, 28, 326.8, 73], title = "GROUND FLOOR PLAN" }
+typical = { bbox = [327.2, 28, 343.6, 73], title = "1ST TO 7TH FLOOR PLAN" }
+terrace = { bbox = [349, 28, 370, 73], title = "OPEN TERRACE & STAIR CABIN PLAN" }
+elevation = { bbox = [311, 76, 331, 110], title = "ELEVATION" }
+section = { bbox = [326, 68, 352, 110], title = "SECTION - 'A-A'" }
+# the same site drawn twice: the 'layout' copy carries the tower footprint, the 'environment' copy the trees and compound wall
+site_layout = { bbox = [190, 25, 232, 100], title = "GROUND FLOOR PARKING LAYOUT PLAN" }
+site_env = { bbox = [93, 25, 135, 105], title = "ENVIRONMENTAL MANAGEMENT LAYOUT PLAN" }
+
+# Layer names used by this architect's CAD template.
+[layers]
+walls      = ["g-wall"]
+rcc        = ["g-r.c.c"]
+openings   = ["g-dw"]          # window / sliding-door frames
+doors      = ["A_DOOR"]
+columns    = ["COLUMN_BSE"]
+footprint  = ["A_BUILT UP"]
+parapet    = ["A_PARAPET"]
+road       = ["A_ROAD"]
+plot       = ["F.P.LINE"]
+door_labels= ["A_Text D&W"]
+cabin      = ["A_Wall", "K STAIR & LIFT"]   # stair cabin / lift room walls on the terrace plan
+ground_line= ["A_Wall"]                    # the long ground-level line on the elevation
+
+[geometry]
+wall_close_radius = 0.13     # closes the two faces of a wall into one solid (walls are <= 0.26 m thick)
+min_wall_area = 0.03
+slab_thickness = 0.15        # section annotation: "0.15 MT. TH. R.C.C. SLAB"
+cantilever = 0.60            # plan annotation: "0.60 MT. TH. ARCH. PROJ. @ L.L."
+parapet_height = 1.15        # plan annotation: "1.15 MT. HT. PARAPET WALL" / "1.15 MT. HT. RAILING" (balcony guard height)
+planter_height = 0.60        # my choice: planter box under the railing (brochure: planters on every balcony)
+wall_thickness = 0.23       # ASSUMPTION: thickness of the wall pieces that fill window/door gaps (extracted solids are 0.11-0.23 m)
+door_head = 2.10             # schedule of opening: every door is x 2.10
+vent_sill = 1.50
+fallback_floor_height = 3.05 # only used if the section labels cannot be read
+
+[floors]
+count = 7
+# unit numbers come from the plan text "101 TO 701": digits = unit, first digit = floor
+front_type = "A"             # brochure: Type A front (18 m road), Type B rear
+
+[site]
+tree_block = "TR1"
+tree_height = 7.0
+tree_crown = 2.3
+background_trees = 14       # seeded scenery beyond the plot
+gate_t = 0.45               # gate position along the road-facing plot edge (0 = west end)
+gate_width = 4.5
+wall_height = 1.8           # compound wall (brochure: low dark wall with the name sign)
+
+[entrance]   # ASSUMPTIONS: the entrance canopy is not drawn on the plans; it is sized from the lobby gap between the lift and stair blocks
+canopy_overhang = 1.2        # canopy is this much wider than the lobby gap
+canopy_depth = 3.1           # projection in front of the lobby
+canopy_height = 2.32         # underside
+door_width = 1.9
+
+[assets]   # Poly Haven (CC0). Downloaded and cached by pipeline/assets.py
+hdri_day  = "kloofendal_48d_partly_cloudy_puresky"
+hdri_dusk = "kloppenheim_06_puresky"
+res = "1k"
+hdri_res = "4k"
+[assets.textures]   # scale = real-world size (m) of one texture tile; tint multiplies the colour
+facade_stone = { id = "painted_plaster_wall",   scale = 2.5, tint = [1.00, 0.96, 0.90] }
+facade_dark  = { id = "concrete_tile_facade",   scale = 2.0 }
+edge         = { id = "painted_plaster_wall",   scale = 2.5, tint = [1.05, 1.03, 1.00] }
+plaster      = { id = "beige_wall_001",         scale = 2.0 }
+concrete     = { id = "asphalt_04",             scale = 3.0, tint = [1.55, 1.55, 1.6] }
+wood         = { id = "dark_wooden_planks",     scale = 1.2, tint = [1.9, 1.5, 1.15] }
+planter      = { id = "painted_plaster_wall",   scale = 1.5, tint = [0.62, 0.26, 0.15] }
+asphalt      = { id = "asphalt_04",             scale = 4.0 }
+paving       = { id = "square_brick_paving",    scale = 2.5, tint = [1.15, 1.1, 1.05] }
+grass        = { id = "leafy_grass",            scale = 3.0, tint = [0.62, 1.0, 0.42] }
+floor_wood   = { id = "oak_wood_planks",       scale = 1.6 }
+tile         = { id = "floor_tiles_06",         scale = 1.5 }
+
+[render]
+width = 2560
+height = 1440
+samples_day = 96
+samples_dusk = 128

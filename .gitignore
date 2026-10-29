@@ -1,0 +1,12 @@
+# CONFIDENTIAL: the architect's drawings are for this assessment only - never commit them
+input/
+*.dwg
+*.dxf
+
+.venv/
+__pycache__/
+*.pyc
+build/
+*.blend1
+.pytest_cache/
+web/vendor/three/*.map
