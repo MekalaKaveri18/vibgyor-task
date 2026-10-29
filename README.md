@@ -118,6 +118,6 @@ canopy. [NOTES.md](NOTES.md) lists them, along with what is not modelled.
 ## Confidentiality
 
 The drawings are confidential and for this assessment only. `input/`, `*.dxf` and `*.dwg` are git-ignored.
-Keep the repo private and delete the drawings and `build/` after submission.
+the repo is private and will delete the drawings and `build/` .
 
 Third-party assets: three.js (MIT, vendored in `web/vendor`), and Poly Haven textures and HDRIs (CC0, downloaded at build time).
